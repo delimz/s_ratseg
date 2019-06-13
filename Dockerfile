@@ -31,11 +31,8 @@ RUN rm -r opencv-4.1.0
 # Cytomine-python-client
 
 RUN mkdir /root/Cytomine
-RUN cd /root/Cytomine/ && git clone https://github.com/cytomine/Cytomine-python-client.git && cd Cytomine-python-client/ && git checkout v1.1.1
-RUN cd /root/Cytomine/Cytomine-python-client/client/ && python setup.py build && python setup.py install
-RUN cd /root/Cytomine/Cytomine-python-client/utilities/ &&  python setup.py build && python setup.py install
-
-RUN cd /root/Cytomine/ && git clone https://github.com/cytomine/Cytomine-tools.git && cd Cytomine-tools/ && git checkout tags/v1.1
+RUN cd /root/Cytomine/ && git clone https://github.com/cytomine-uliege/Cytomine-python-client.git && cd Cytomine-python-client/ && git checkout v2.2.0
+RUN cd /root/Cytomine/Cytomine-python-client/ && python3 setup.py install
 
 COPY hello.py app/
 
