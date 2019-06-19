@@ -1,0 +1,109 @@
+{
+    "name": "ratseg",
+    "container-image": {
+        "image": "delimz/s_ratseg",
+        "type": "singularity"
+    },
+    "schema-version": "cytomine-0.1",
+    "description": "optional description",
+    "command-line": "python run.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE SLICE_TERM MODEL-NAME MODEL-TYPE RESIDUAL ",
+    "inputs": [
+	    {
+	      "id": "cytomine_host",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Cytomine host",
+	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
+	      "set-by-server": true,
+	      "optional": false,
+	      "type": "String"
+	    },
+	    {
+	      "id": "cytomine_public_key",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Cytomine public key",
+	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
+	      "set-by-server": true,
+	      "optional": false,
+	      "type": "String"
+	    },
+	    {
+	      "id": "cytomine_private_key",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Cytomine public key",
+	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
+	      "set-by-server": true,
+	      "optional": false,
+	      "type": "String"
+	    },
+	    {
+	      "id": "cytomine_id_project",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Cytomine project ID",
+	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
+	      "set-by-server": true,
+	      "optional": false,
+	      "type": "Number"
+	    },
+	    {
+	      "id": "cytomine_id_software",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Cytomine software ID",
+	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
+	      "set-by-server": true,
+	      "optional": false,
+	      "type": "Number"
+	    },
+	    {
+	      "id": "cytomine_verbosity",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "Log verbosity level",
+	      "description": "Type and values depends on your software implementation, not set by server and must be optional",
+	      "optional": true,
+	      "type": "String"
+	    },
+	    {
+	      "id": "slice_term",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "id of the term delimiting a slice",
+	      "description": "A number which is an integer",
+	      "optional": false,
+	      "type": "Number",
+	      "integer": true
+	    },
+	    {
+	      "id": "model-name",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "model name",
+	      "description": "prefix used for all intermediate results files (images, weights, stats, etc.)",
+	      "optional": false,
+	      "type": "String"
+	    },
+	    {
+	      "id": "model-type",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "model type",
+	      "description": "name of the architecture varient among unet, vnet, segnet, and mnet",
+	      "optional": false,
+	      "type": "String"
+	    },
+	    {
+	      "id": "residual",
+	      "value-key": "@ID",
+	      "command-line-flag": "--@id",
+	      "name": "residual connections",
+	      "description":"Whether to use residual conneciton accross the blocks of the architecture ",
+	      "optional": false,
+	      "type": "Boolean",
+	      "default": true
+	    }
+    ]
+}
