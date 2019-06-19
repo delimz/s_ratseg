@@ -6,7 +6,7 @@
     },
     "schema-version": "cytomine-0.1",
     "description": "optional description",
-    "command-line": "python run.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE SLICE_TERM MODEL-NAME MODEL-TYPE RESIDUAL ",
+    "command-line": "--nv python hello.py CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE SLICE_TERM MODEL-NAME MODEL-TYPE RESIDUAL ",
     "inputs": [
 	    {
 	      "id": "cytomine_host",
