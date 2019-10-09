@@ -29,7 +29,7 @@ print(os.listdir('/app/ratseg-master'))
 # '--model-name', 'vnet',
 # '--model-type', 'vnet',
 # '--residual', 'true']
-job=cytomine.CytomineJob.from_cli(sys.argv[1:])
+cj=cytomine.CytomineJob.from_cli(sys.argv[1:])
 
 parser = ArgumentParser(prog="ratseg_software")
 parser.add_argument('--cytomine_host', dest='host',
@@ -58,14 +58,13 @@ parser.add_argument('--residual',type=parsebool,default=True,
         help='add skip connections within blocks of convolution')
 
 
-
+cj.job.update(progress=50,statusComment="doing stuff")
 
 params=parser.parse_args(sys.argv[1:])
 
 idJob=params.id_software
 
 
-job.update('doing stuff',1,100)
 
 subprocess.run(['mkdir','/tmp/imgs'])
 subprocess.run(['mkdir','tmp'])
