@@ -29,7 +29,10 @@ print(os.listdir('/app/ratseg-master'))
 # '--model-name', 'vnet',
 # '--model-type', 'vnet',
 # '--residual', 'true']
+
 cj=cytomine.CytomineJob.from_cli(sys.argv[1:])
+cj.start()
+
 
 parser = ArgumentParser(prog="ratseg_software")
 parser.add_argument('--cytomine_host', dest='host',
@@ -99,3 +102,4 @@ subprocess.run(['python3','ratseg-master/postprocessing.py',
     '--terms',terms,
     '--model-name',params.model_name ])
 
+cj.stop()
