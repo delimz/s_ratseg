@@ -11,6 +11,8 @@ print(sys.argv[1:])
 import os
 base_path = os.getenv("HOME")
 
+import subprocess
+
 def parsebool(x):
     return x in ['True','true','t','yes','y','yep','affirmative','yesplease','ya','oy','oui','ui','v','V','Vrai']
 
@@ -59,7 +61,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     parser.add_argument('--residual',type=parsebool,default=True,
             help='add skip connections within blocks of convolution')
 
-    cj.job.update(progress=50,statusComment="doing stuff")
+    cj.job.update(progress=0,statusComment="launched")
 
     params=parser.parse_args(sys.argv[1:])
 
@@ -71,6 +73,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     subprocess.run(['mkdir','tmp'])
 
 
+
     subprocess.run(['python3','ratseg-master/get_data.py',
         '--cytomine_host', params.host,
         '--cytomine_public_key', params.public_key,
@@ -79,6 +82,9 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--slice_term', params.slice_term,
         '--download_path', '/tmp/imgs'])
 
+    cj.job.update(progress=30,statusComment="got data")
+    imgs=[2319573,2319579,2319587,2319595]
+    terms=[1012286,1012259,1012265,1012280]
 
     subprocess.run(['python3','ratseg-master/main.py',
         '--imgs-test',imgs,
@@ -89,6 +95,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--do-train', 'False',
         '--do-test', 'True'])
 
+    cj.job.update(progress=60,statusComment="got masks")
 
     subprocess.run(['python3','ratseg-master/postprocessing.py',
         '--cytomine_host', params.host,
@@ -99,4 +106,6 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--imgs-test',imgs,
         '--terms',terms,
         '--model-name',params.model_name ])
+
+    cj.job.update(progress=90,statusComment="got masks")
 
