@@ -79,7 +79,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
         '--cytomine_id_project', params.id_project,
-        '--slice_term', params.slice_term,
+        '--slice_term', str(params.slice_term),
         '--download_path', '/tmp/imgs'])
 
     cj.job.update(progress=30,statusComment="got data")
@@ -87,8 +87,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     terms=[1012286,1012259,1012265,1012280]
 
     subprocess.run(['python3','ratseg-master/main.py',
-        '--imgs-test',imgs,
-        '--terms',terms,
+        '--imgs-test',[str(x) for x in imgs],
+        '--terms',[str(x) for x in terms],
         '--model-name',params.model_name,
         '--model_type',params.model_type,
         '--residual',params.residual,
@@ -102,9 +102,9 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
         '--cytomine_id_project', params.id_project,
-        '--slice_term', params.slice_term,
-        '--imgs-test',imgs,
-        '--terms',terms,
+        '--slice_term', str(params.slice_term),
+        '--imgs-test',[str(x) for x in imgs],
+        '--terms',[str(x) for x in terms],
         '--model-name',params.model_name ])
 
     cj.job.update(progress=90,statusComment="got masks")
