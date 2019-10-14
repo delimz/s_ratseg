@@ -30,76 +30,73 @@ print(os.listdir('/app/ratseg-master'))
 # '--model-type', 'vnet',
 # '--residual', 'true']
 
-cj=cytomine.CytomineJob.from_cli(sys.argv[1:])
-cj.start()
+with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
 
 
-parser = ArgumentParser(prog="ratseg_software")
-parser.add_argument('--cytomine_host', dest='host',
-                    default='https://demo.cytomine.coop', help="The Cytomine host")
-parser.add_argument('--cytomine_public_key', dest='public_key',
-                    default='5870ca8a-d1a6-4f8c-b51c-6cdb871cba5b',
-                    help="The Cytomine public key")
-parser.add_argument('--cytomine_private_key', dest='private_key',
-                    help="The Cytomine private key",
-                    default='7d890db3-2537-4f7a-b313-2c36b208c22f')
-parser.add_argument('--cytomine_id_project', dest='id_project',
-                    help="The project from which we want the images",
-                    default=1012227)
-parser.add_argument('--download_path',
-                    help="Where to store images",
-                    default='/home/donovan/Downloads/')
-parser.add_argument('--slice_term',type=int,
-                    help="id of the ROI delimiting annotation",
-                    default=2469614)
+    parser = ArgumentParser(prog="ratseg_software")
+    parser.add_argument('--cytomine_host', dest='host',
+                        default='https://demo.cytomine.coop', help="The Cytomine host")
+    parser.add_argument('--cytomine_public_key', dest='public_key',
+                        default='5870ca8a-d1a6-4f8c-b51c-6cdb871cba5b',
+                        help="The Cytomine public key")
+    parser.add_argument('--cytomine_private_key', dest='private_key',
+                        help="The Cytomine private key",
+                        default='7d890db3-2537-4f7a-b313-2c36b208c22f')
+    parser.add_argument('--cytomine_id_project', dest='id_project',
+                        help="The project from which we want the images",
+                        default=1012227)
+    parser.add_argument('--download_path',
+                        help="Where to store images",
+                        default='/home/donovan/Downloads/')
+    parser.add_argument('--slice_term',type=int,
+                        help="id of the ROI delimiting annotation",
+                        default=2469614)
 
-parser.add_argument('--cytomine_id_software',dest='id_software')
+    parser.add_argument('--cytomine_id_software',dest='id_software')
 
-parser.add_argument('-m','--model-name',default='vanilla')
-parser.add_argument('-t','--model-type',default='mnet')
-parser.add_argument('--residual',type=parsebool,default=True,
-        help='add skip connections within blocks of convolution')
+    parser.add_argument('-m','--model-name',default='vanilla')
+    parser.add_argument('-t','--model-type',default='mnet')
+    parser.add_argument('--residual',type=parsebool,default=True,
+            help='add skip connections within blocks of convolution')
 
+    cj.job.update(progress=50,statusComment="doing stuff")
 
-cj.job.update(progress=50,statusComment="doing stuff")
+    params=parser.parse_args(sys.argv[1:])
 
-params=parser.parse_args(sys.argv[1:])
-
-idJob=params.id_software
+    idJob=params.id_software
 
 
 
-subprocess.run(['mkdir','/tmp/imgs'])
-subprocess.run(['mkdir','tmp'])
+    subprocess.run(['mkdir','/tmp/imgs'])
+    subprocess.run(['mkdir','tmp'])
 
 
-subprocess.run(['python3','ratseg-master/get_data.py',
-    '--cytomine_host', params.host,
-    '--cytomine_public_key', params.public_key,
-    '--cytomine_private_key', params.private_key,
-    '--cytomine_id_project', params.id_project,
-    '--slice_term', params.slice_term,
-    '--download_path', '/tmp/imgs'])
+    subprocess.run(['python3','ratseg-master/get_data.py',
+        '--cytomine_host', params.host,
+        '--cytomine_public_key', params.public_key,
+        '--cytomine_private_key', params.private_key,
+        '--cytomine_id_project', params.id_project,
+        '--slice_term', params.slice_term,
+        '--download_path', '/tmp/imgs'])
 
 
-subprocess.run(['python3','ratseg-master/main.py',
-    '--imgs-test',imgs,
-    '--terms',terms,
-    '--model-name',params.model_name,
-    '--model_type',params.model_type,
-    '--residual',params.residual,
-    '--do-train', 'False',
-    '--do-test', 'True'])
+    subprocess.run(['python3','ratseg-master/main.py',
+        '--imgs-test',imgs,
+        '--terms',terms,
+        '--model-name',params.model_name,
+        '--model_type',params.model_type,
+        '--residual',params.residual,
+        '--do-train', 'False',
+        '--do-test', 'True'])
 
 
-subprocess.run(['python3','ratseg-master/postprocessing.py',
-    '--cytomine_host', params.host,
-    '--cytomine_public_key', params.public_key,
-    '--cytomine_private_key', params.private_key,
-    '--cytomine_id_project', params.id_project,
-    '--slice_term', params.slice_term,
-    '--imgs-test',imgs,
-    '--terms',terms,
-    '--model-name',params.model_name ])
+    subprocess.run(['python3','ratseg-master/postprocessing.py',
+        '--cytomine_host', params.host,
+        '--cytomine_public_key', params.public_key,
+        '--cytomine_private_key', params.private_key,
+        '--cytomine_id_project', params.id_project,
+        '--slice_term', params.slice_term,
+        '--imgs-test',imgs,
+        '--terms',terms,
+        '--model-name',params.model_name ])
 
-cj.stop()
