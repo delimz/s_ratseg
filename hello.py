@@ -91,7 +91,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--terms',"%s %s %s %s" % tuple([str(x) for x in terms]),
         '--model-name',params.model_name,
         '--model_type',params.model_type,
-        '--residual',params.residual,
+        '--residual',str(params.residual),
         '--do-train', 'False',
         '--do-test', 'True'])
 
