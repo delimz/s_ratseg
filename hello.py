@@ -87,8 +87,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     terms=[1012286,1012259,1012265,1012280]
 
     subprocess.run(['python3','ratseg-master/main.py',
-        '--imgs-test',"%s %s %s %s" % [str(x) for x in imgs],
-        '--terms',"%s %s %s %s" %[str(x) for x in terms],
+        '--imgs-test',"%s %s %s %s" % tuple([str(x) for x in imgs]),
+        '--terms',"%s %s %s %s" % tuple([str(x) for x in terms]),
         '--model-name',params.model_name,
         '--model_type',params.model_type,
         '--residual',params.residual,
@@ -103,8 +103,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--cytomine_private_key', params.private_key,
         '--cytomine_id_project', params.id_project,
         '--slice_term', str(params.slice_term),
-        '--imgs-test',"%s %s %s %s" %[str(x) for x in imgs],
-        '--terms',"%s %s %s %s" %[str(x) for x in terms],
+        '--imgs-test',"%s %s %s %s" %tuple([str(x) for x in imgs]),
+        '--terms',"%s %s %s %s" %tuple([str(x) for x in terms]),
         '--model-name',params.model_name ])
 
     cj.job.update(progress=90,statusComment="got masks")
