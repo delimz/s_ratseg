@@ -74,7 +74,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
 
 
 
-    subprocess.run(['python3','ratseg-master/get_data.py',
+    subprocess.run(['python3','/app/ratseg-master/get_data.py',
         '--cytomine_host', params.host,
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
@@ -86,7 +86,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     imgs=[2319573,2319579,2319587,2319595]
     terms=[1012286,1012259,1012265,1012280]
 
-    subprocess.run(['python3','ratseg-master/main.py',
+    subprocess.run(['python3','/app/ratseg-master/main.py',
         '--imgs-test',"%s %s %s %s" % tuple([str(x) for x in imgs]),
         '--terms',"%s %s %s %s" % tuple([str(x) for x in terms]),
         '--model-name',params.model_name,
@@ -97,7 +97,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
 
     cj.job.update(progress=60,statusComment="got masks")
 
-    subprocess.run(['python3','ratseg-master/postprocessing.py',
+    subprocess.run(['python3','/app/ratseg-master/postprocessing.py',
         '--cytomine_host', params.host,
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
