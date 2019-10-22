@@ -1,7 +1,7 @@
 FROM delimz/base:latest
 
-COPY hello.py /app/
 ADD ratseg-master.tar.gz /app/
+COPY hello.py /app/
 COPY x01 /app/
 COPY x00 /app/
 
