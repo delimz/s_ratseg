@@ -19,7 +19,6 @@ def parsebool(x):
 print(tf.test.is_gpu_available())
 print(cv2.__version__)
 print("yeay")
-print("woosh")
 print(os.listdir('/app/'))
 print(os.listdir('/app/ratseg-master'))
 #sample option
@@ -68,12 +67,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
 
     idJob=params.id_software
 
-
-
     subprocess.run(['mkdir','/tmp/imgs'])
     subprocess.run(['mkdir','tmp'])
-
-
 
     subprocess.run(['python3','/app/ratseg-master/get_data.py',
         '--cytomine_host', params.host,
