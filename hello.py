@@ -76,7 +76,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--cytomine_private_key', params.private_key,
         '--cytomine_id_project', params.id_project,
         '--slice_term', str(params.slice_term),
-        '--download_path', '/tmp/imgs'])
+        '--download_path', '/tmp/imgs/'])
 
     cj.job.update(progress=30,statusComment="got data")
     imgs=[2319573,2319579,2319587,2319595]
