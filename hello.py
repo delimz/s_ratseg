@@ -91,7 +91,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--imgs-test',*[str(x) for x in imgs],
         '--terms',*[str(x) for x in terms],
         '--model-name',params.model_name,
-        '--model_type',params.model_type,
+        '--model-type',params.model_type,
         '--residual',str(params.residual),
         '--do-train', 'False',
         '--do-test', 'True'])
@@ -106,7 +106,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--slice_term', str(params.slice_term),
         '--imgs-test',*[str(x) for x in imgs],
         '--terms',*[str(x) for x in terms],
-        '--model-name',params.model_name ])
+        '--model',params.model_name ])
 
     cj.job.update(progress=90,statusComment="got masks")
 
