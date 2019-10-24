@@ -70,7 +70,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     subprocess.run(['mkdir','/tmp/imgs'])
     subprocess.run(['mkdir','tmp'])
 
-    subprocess.run(['python3','/app/ratseg-master/get_data.py',
+    stat=subprocess.run(['python3','/app/ratseg-master/get_data.py',
         '--cytomine_host', params.host,
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
@@ -78,23 +78,35 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--slice_term', str(params.slice_term),
         '--download_path', '/tmp/imgs/'])
 
-    cj.job.update(progress=30,statusComment="got data")
-    imgs=[2319573,2319579,2319587,2319595]
-    terms=[1012286,1012259,1012265,1012280]
 
-    subprocess.run(['python3','/app/ratseg-master/main.py',
+    cj.job.update(progress=30,statusComment="got data")
+
+    #TODO get the right images
+    #imgs=[2319573,2319579,2319587,2319595]
+    #terms=[1012286,1012259,1012265,1012280]
+    imgs=[85778	,85622,85772,85356]
+    terms=[576,584,592,568]
+
+    if stat.returncode !=0 :
+        cj.job.update(status=cj.job.FAILED)
+        raise Exception("return status not zero")
+
+    stat=subprocess.run(['python3','/app/ratseg-master/main.py',
         '--imgs-test',*[str(x) for x in imgs],
         '--terms',*[str(x) for x in terms],
         '--model-name',params.model_name,
         '--model-type',params.model_type,
         '--residual',str(params.residual),
-        '--datadir','/tmp/imgs/',
         '--do-train', 'False',
         '--do-test', 'True'])
 
+    if stat.returncode !=0 :
+        cj.job.update(status=cj.job.FAILED)
+        raise Exception("return status not zero")
+
     cj.job.update(progress=60,statusComment="got masks")
 
-    subprocess.run(['python3','/app/ratseg-master/postprocessing.py',
+    stat=subprocess.run(['python3','/app/ratseg-master/postprocessing.py',
         '--cytomine_host', params.host,
         '--cytomine_public_key', params.public_key,
         '--cytomine_private_key', params.private_key,
@@ -104,5 +116,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--terms',*[str(x) for x in terms],
         '--model',params.model_name ])
 
+    if stat.returncode !=0 :
+        cj.job.update(status=cj.job.FAILED)
+        raise Exception("return status not zero")
     cj.job.update(progress=90,statusComment="got masks")
 
