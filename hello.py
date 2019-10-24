@@ -88,6 +88,7 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--model-name',params.model_name,
         '--model-type',params.model_type,
         '--residual',str(params.residual),
+        '--datadir','/tmp/imgs/',
         '--do-train', 'False',
         '--do-test', 'True'])
 
