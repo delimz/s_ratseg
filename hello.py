@@ -3,6 +3,7 @@ import cv2
 import matplotlib.pyplot as plt
 import cytomine
 from cytomine import Cytomine
+from cytomine.models import Annotation, Job, ImageInstanceCollection, AnnotationCollection, Property,  AttachedFileCollection
 
 from argparse import ArgumentParser
 import sys
@@ -28,7 +29,7 @@ print(os.listdir('/app/ratseg-master'))
 #'--cytomine_id_project', '155',
 #'--cytomine_id_software', '228922',
 # '--slice_term', '30289',
-# '--model-name', 'vnet',
+# '--model-name', 'vnet_res',
 # '--model-type', 'vnet',
 # '--residual', 'true']
 
@@ -61,14 +62,37 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
     parser.add_argument('--residual',type=parsebool,default=True,
             help='add skip connections within blocks of convolution')
 
+    parser.add_argument('--model_job_id',type=int,default=-1)
+
     cj.job.update(progress=0,statusComment="launched")
 
     params=parser.parse_args(sys.argv[1:])
 
     idJob=params.id_software
+    model_job_id=params.model_job_id
+
+    def load_file(job, download_path, model_filename):
+        attached_files = AttachedFileCollection(job).fetch()
+        if not (0 < len(attached_files) ):
+            raise ValueError("Less than 1 file attached to the Job (found {} file(s)).".format(len(attached_files)))
+        attached_file = attached_files[0]
+        if attached_file.filename != model_filename:
+            raise ValueError(
+                "Expected model file name is '{}' (found: '{}').".format(model_filename, attached_file.filename))
+        model_path = os.path.join(download_path, model_filename)
+        attached_file.download(model_path)
+        return model_path
 
     subprocess.run(['mkdir','/tmp/imgs'])
     subprocess.run(['mkdir','tmp'])
+
+    job=Job().fetch(254363)
+    load_file(job,'tmp/','vnet_res.ckpt.data-00000-of-00001')
+    job=Job().fetch(254578)
+    load_file(job,'tmp/','vnet_res.ckpt.meta')
+    job=Job().fetch(254659)
+    load_file(job,'tmp/','vnet_res.ckpt.index')
+
 
     stat=subprocess.run(['python3','/app/ratseg-master/get_data.py',
         '--cytomine_host', params.host,
