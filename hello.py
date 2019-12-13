@@ -138,8 +138,8 @@ with cytomine.CytomineJob.from_cli(sys.argv[1:]) as cj:
         '--slice_term', str(params.slice_term),
         '--imgs-test',*[str(x) for x in imgs],
         '--terms',*[str(x) for x in terms],
-        '--model',params.model_name ],
-        '--upload','True')
+        '--model',params.model_name ])#,
+        #'--upload','True'])
 
     if stat.returncode !=0 :
         cj.job.update(status=cj.job.FAILED)
