@@ -1,7 +1,7 @@
-FROM delimz/base:latest
+FROM delimz/base2:latest
 
 COPY hello.py /app/
-ADD ratseg-master.tar.gz /app/
+RUN git clone https://github.com/delimz/unet.git
 
 WORKDIR /app
 

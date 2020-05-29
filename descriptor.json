@@ -1,131 +1,381 @@
 {
-    "name": "ratseg",
-    "container-image": {
-        "image": "delimz/s_ratseg",
-        "type": "singularity"
-    },
-    "schema-version": "cytomine-0.1",
-    "description": "optional description",
-    "command-line": "CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE SLICE_TERM MODEL-NAME MODEL-TYPE RESIDUAL ",
-    "inputs": [
-	    {
-	      "id": "cytomine_host",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Cytomine host",
-	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
-	      "set-by-server": true,
-	      "optional": false,
-	      "type": "String"
-	    },
-	    {
-	      "id": "cytomine_public_key",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Cytomine public key",
-	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
-	      "set-by-server": true,
-	      "optional": false,
-	      "type": "String"
-	    },
-	    {
-	      "id": "cytomine_private_key",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Cytomine public key",
-	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
-	      "set-by-server": true,
-	      "optional": false,
-	      "type": "String"
-	    },
-	    {
-	      "id": "cytomine_id_project",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Cytomine project ID",
-	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
-	      "set-by-server": true,
-	      "optional": false,
-	      "type": "Number"
-	    },
-	    {
-	      "id": "cytomine_id_software",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Cytomine software ID",
-	      "description": "Mandatory to communicate with Cytomine; automatically filled by server",
-	      "set-by-server": true,
-	      "optional": false,
-	      "type": "Number"
-	    },
-	    {
-	      "id": "cytomine_verbosity",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "Log verbosity level",
-	      "description": "Type and values depends on your software implementation, not set by server and must be optional",
-	      "optional": true,
-	      "type": "String"
-	    },
-	    {
-	      "id": "slice_term",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "id of the term delimiting a slice",
-	      "description": "A number which is an integer",
-	      "optional": false,
-	      "type": "Number",
-	      "integer": true
-	    },
-	    {
-	      "id": "model-name",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "model name",
-	      "description": "prefix used for all intermediate results files (images, weights, stats, etc.)",
-	      "optional": false,
-	      "type": "String"
-	    },
-	    {
-	      "id": "model-type",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "model type",
-	      "description": "name of the architecture varient among unet, vnet, segnet, and mnet",
-	      "optional": false,
-	      "type": "String"
-	    },
-	    {
-	      "id": "residual",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "residual connections",
-	      "description":"Whether to use residual conneciton accross the blocks of the architecture ",
-	      "optional": false,
-	      "type": "Boolean",
-	      "default": true
-	    },
-	    {
-	      "id": "learning_rate",
-	      "value-key": "@ID",
-	      "command-line-flag": "--@id",
-	      "name": "learning rate",
-	      "description":" learning rate of the optimization algorithm ",
-	      "optional": true,
-	      "type": "Boolean",
-	      "default": "0.001"
-	    },
-	    {
-		    "id": "model_job_id",
-		    "value-key": "@ID",
-		    "command-line-flag": "--@id",
-		    "name": "Model job id",
-		    "description": "Id of the job which has built the model (the job must have the model weights as attached file 'weights.hf5' and the following properties: image_width, image_height, train_mean, train_std)",
-		    "type": "Number",
-		    "optional": true,
-		    "set-by-server": false
-		}
-		
-
-    ]
+   "command-line" : "CYTOMINE_HOST CYTOMINE_PUBLIC_KEY CYTOMINE_PRIVATE_KEY CYTOMINE_ID_PROJECT CYTOMINE_ID_SOFTWARE PRESET DEPTH CONVOLUTIONS FILTER_FACTOR DILATIONS FILTER_SIZES RESIDUALS FRONT_LEG BACK_LEG CHECKPOINT MIN_OUTPUT_SIZE N_JOBS BATCH_SIZE EPOCHS HUE_DELTA SATURATION_DELTA BRIGHTNESS_DELTA CONTRAST_DELTA HORIZONTAL_FLIP ROTATE_RANGE DEFORMATION_RANGE IMGS_TRAIN IMGS_VAL IMGS_TEST DATADIR TERMS SLICE_TERM CROP_SIZE",
+   "container-image" : {
+      "image" : "delimz/s_unet",
+      "type" : "singularity"
+   },
+   "description" : "segmentation by unet-like neural network",
+   "inputs" : [
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "address of the cytomine server",
+         "id" : "cytomine_host",
+         "name" : "cytomine host",
+         "optional" : false,
+         "set-by-server" : true,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "api public key for cytomine server",
+         "id" : "cytomine_public_key",
+         "name" : "cytomine public key",
+         "optional" : false,
+         "set-by-server" : true,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "api private key for the cytomine server",
+         "id" : "cytomine_private_key",
+         "name" : "cytomine private key",
+         "optional" : false,
+         "set-by-server" : true,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "project id on the cytomine server",
+         "id" : "cytomine_id_project",
+         "name" : "cytomine id project",
+         "optional" : false,
+         "set-by-server" : true,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "software id on the cytomine server",
+         "id" : "cytomine_id_software",
+         "name" : "cytomine id software",
+         "optional" : false,
+         "set-by-server" : true,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : null,
+         "description" : "preset model parameters, either unet vnet mnet segnet",
+         "id" : "preset",
+         "name" : "preset",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 4,
+         "description" : "depth of unet",
+         "id" : "depth",
+         "name" : "depth",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [
+            2
+         ],
+         "description" : "number of conv per encoder",
+         "id" : "convolutions",
+         "name" : "convolutions",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 16,
+         "description" : "base number of filters in first level of convolution",
+         "id" : "filter_factor",
+         "name" : "filter factor",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [
+            1
+         ],
+         "description" : "size of dilation",
+         "id" : "dilations",
+         "name" : "dilations",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [
+            3
+         ],
+         "description" : "size of the filters for convolutions",
+         "id" : "filter_sizes",
+         "name" : "filter sizes",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : false,
+         "description" : "use residual connection",
+         "id" : "residuals",
+         "name" : "residuals",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Boolean",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : false,
+         "description" : "deep supervision encoder side",
+         "id" : "front_leg",
+         "name" : "front leg",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Boolean",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : false,
+         "description" : "deep supervision decoder side",
+         "id" : "back_leg",
+         "name" : "back leg",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Boolean",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : null,
+         "description" : "checkpoint path to use",
+         "id" : "checkpoint",
+         "name" : "checkpoint",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 512,
+         "description" : "minimum size of output of the neural network",
+         "id" : "min_output_size",
+         "name" : "min output size",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 16,
+         "description" : "number of cpu jobs for image preprocessing",
+         "id" : "n_jobs",
+         "name" : "n jobs",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 5,
+         "description" : "number of tiles per batch of training step",
+         "id" : "batch_size",
+         "name" : "batch size",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 5,
+         "description" : "number of epochs to train for",
+         "id" : "epochs",
+         "name" : "epochs",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 0.05,
+         "description" : "data augmentation by hue alteration",
+         "id" : "hue_delta",
+         "name" : "hue delta",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 0.05,
+         "description" : "data augmentation by staturation alteration range",
+         "id" : "saturation_delta",
+         "name" : "saturation delta",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 0.05,
+         "description" : "data augmentation by brightness alteration range",
+         "id" : "brightness_delta",
+         "name" : "brightness delta",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 0.05,
+         "description" : "data augmentation by contrast alteration range",
+         "id" : "contrast_delta",
+         "name" : "contrast delta",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : true,
+         "description" : "data augmentation by flipping images horizontally",
+         "id" : "horizontal_flip",
+         "name" : "horizontal flip",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Boolean",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 15,
+         "description" : "data augmentation by rotation angle range",
+         "id" : "rotate_range",
+         "name" : "rotate range",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 0.02,
+         "description" : "data augmentation by streching of the image",
+         "id" : "deformation_range",
+         "name" : "deformation range",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "id of the images used for training",
+         "id" : "imgs_train",
+         "name" : "imgs train",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "id of the images used for validation",
+         "id" : "imgs_val",
+         "name" : "imgs val",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "id of the images used for testing",
+         "id" : "imgs_test",
+         "name" : "imgs test",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : "/mnt/SSD_128/tmp",
+         "description" : "where the crops are stored",
+         "id" : "datadir",
+         "name" : "datadir",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : [],
+         "description" : "id of the terms to learn or predict",
+         "id" : "terms",
+         "name" : "terms",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "String",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : -1,
+         "description" : "id of the annotation delimiting the zone to segment",
+         "id" : "slice_term",
+         "name" : "slice term",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      },
+      {
+         "command-line-flag" : "--@id",
+         "default" : 2048,
+         "description" : "size of the square tiles to crop",
+         "id" : "crop_size",
+         "name" : "crop size",
+         "optional" : true,
+         "set-by-server" : false,
+         "type" : "Number",
+         "value-key" : "@ID"
+      }
+   ],
+   "name" : "unet",
+   "schema-version" : "cytomine-0.1"
 }
